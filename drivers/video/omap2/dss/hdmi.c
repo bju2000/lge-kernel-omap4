@@ -115,7 +115,7 @@ static struct {
 
 static const u8 edid_header[8] = {0x0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0};
 
-#if defined(CONFIG_MACH_LGE_COSMO_3D_DISPLAY) || defined (CONFIG_MACH_LGE_CX2)
+#if defined(CONFIG_MACH_LGE_COSMO_3D_DISPLAY) || defined(CONFIG_MACH_LGE_CX2)
 bool hdmi_s3d_supported(void);
 
 static void hdmi_video_stop(struct omap_dss_device *dssdev)
@@ -454,7 +454,7 @@ int hdmi_get_datablock_offset(u8 *edid, enum extension_edid_db datablock, int *o
 	return 1;
 }
 
-#if defined(CONFIG_MACH_LGE_COSMO_3D_DISPLAY) || defined (CONFIG_MACH_LGE_CX2)
+#if defined(CONFIG_MACH_LGE_COSMO_3D_DISPLAY)
 bool hdmi_s3d_supported(void)
 {
 	bool s3d_support = false;
@@ -624,6 +624,7 @@ EXPORT_SYMBOL(hdcp_send_uevent);
 static void hdmi_load_hdcp_keys(struct omap_dss_device *dssdev)
 {
 	int aksv;
+	int retries = 5;
 	DSSDBG("hdmi_load_hdcp_keys\n");
 	/* load the keys and reset the wrapper to populate the AKSV registers*/
 	if (hdmi.hdmi_power_on_cb) {
@@ -637,6 +638,15 @@ static void hdmi_load_hdcp_keys(struct omap_dss_device *dssdev)
 			 * the registers*/
 			mdelay(10);
 			aksv = hdmi_ti_4xx_check_aksv_data(&hdmi.hdmi_data);
+
+			while (retries) {
+				aksv = hdmi_ti_4xx_check_aksv_data(&hdmi.hdmi_data);
+				if (aksv == HDMI_AKSV_VALID)
+					break;
+				msleep(50);
+				retries--;
+			}
+
 			hdmi.wp_reset_done = (aksv == HDMI_AKSV_VALID) ?
 				true : false;
 			DSSINFO("HDMI_WRAPPER RESET DONE\n");
@@ -779,7 +789,7 @@ static int hdmi_power_on(struct omap_dss_device *dssdev)
 
 	/* bypass TV gamma table */
 // LGE_CHANGE_S [sungho.jung@lge.com] 2011-10-28, [SU540, LU5400]
-#if defined(CONFIG_P2_GAMMA) || defined(CONFIG_U2_GAMMA) || defined(CONFIG_COSMO_GAMMA) || defined(CONFIG_CX2_GAMMA)
+#if defined(CONFIG_P2_GAMMA) || defined(CONFIG_U2_GAMMA) || defined(CONFIG_COSMO_GAMMA)
         dispc_enable_gamma_table(1);
 #else
         dispc_enable_gamma_table(0);
@@ -1181,7 +1191,7 @@ static int omapdss_hdmihw_probe(struct platform_device *pdev)
 
 	hdmi.hdmi_irq = platform_get_irq(pdev, 0);
 // LGE_CHANGE_S [sungho.jung@lge.com] 2012-02-20
-#if defined(CONFIG_MACH_LGE_CX2)
+#if 0
 	r = request_irq(hdmi.hdmi_irq, hdmi_irq_handler, 0, "OMAP HDMI", NULL);
 	if (r < 0) {
 		pr_err("hdmi: request_irq %s failed\n",
@@ -1254,3 +1264,4 @@ void hdmi_dump_regs(struct seq_file *s)
 
 	hdmi_runtime_put();
 }
+

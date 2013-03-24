@@ -1187,8 +1187,8 @@ static int max17043_probe(struct platform_device *pdev)
 	else
 		adapter->dev.parent = NULL;
 
-//	printk("########## max17043_probe GPIO REQUEST START................................ \n");
-//	printk("########## max17043_probe GPIO REQUEST SDA................................ \n");
+	printk("########## max17043_probe GPIO REQUEST START................................ \n");
+	printk("########## max17043_probe GPIO REQUEST SDA................................ \n");
 
 	ret = gpio_request(max_dev->pdata->gpio_sda, "fuel_gauge_sda");
 	if (ret < 0) {
@@ -1199,7 +1199,7 @@ static int max17043_probe(struct platform_device *pdev)
 	}
 	gpio_direction_output(max_dev->pdata->gpio_sda, 1);
 
-//	printk("########## max17043_probe GPIO REQUEST SCL................................ \n");
+	printk("########## max17043_probe GPIO REQUEST SCL................................ \n");
 	ret = gpio_request(max_dev->pdata->gpio_scl, "fuel_gauge_scl");
 	if (ret < 0) {
 		printk(KERN_ERR "Failed to request GPIO_%d for fuel_gauge_scl\n",
@@ -1209,7 +1209,7 @@ static int max17043_probe(struct platform_device *pdev)
 	}
 	gpio_direction_output(max_dev->pdata->gpio_scl, 1);
 
-//	printk("########## max17043_probe GPIO REQUEST ALERT................................ \n");
+	printk("########## max17043_probe GPIO REQUEST ALERT................................ \n");
 	ret = gpio_request(max_dev->pdata->gpio_alert, "fuel_gauge_alert");
 	if (ret < 0) {
 		printk(KERN_ERR "Failed to request GPIO_%d for fuel_gauge_alert\n",
@@ -1219,7 +1219,7 @@ static int max17043_probe(struct platform_device *pdev)
 	}
 	gpio_direction_input(max_dev->pdata->gpio_alert);
 
-//	printk("########## max17043_probe GPIO REQUEST ALERT IRQ................................ \n");
+	printk("########## max17043_probe GPIO REQUEST ALERT IRQ................................ \n");
 	ret = request_irq(gpio_to_irq(max_dev->pdata->gpio_alert),
 				max17043_interrupt_handler,
 				IRQF_TRIGGER_FALLING,
@@ -1230,7 +1230,7 @@ static int max17043_probe(struct platform_device *pdev)
 		goto err_request_irq_failed;
 	}
 
-//	printk("########## max17043_probe GPIO REQUEST ALERT ENABLE_IRQ_WAKE................................ \n");
+	printk("########## max17043_probe GPIO REQUEST ALERT ENABLE_IRQ_WAKE................................ \n");
 	ret = enable_irq_wake(gpio_to_irq(max_dev->pdata->gpio_alert));
 	if (ret < 0) {
 		printk(KERN_DEBUG "[MAX17043] set GAUGE_INT to wakeup source failed.\n");
@@ -1244,20 +1244,20 @@ static int max17043_probe(struct platform_device *pdev)
 	max_dev->config = 0xB000;
 	max_dev->fg_enable = 1;
 
-//	printk("########## max17043_probe GPIO REQUEST PLATFORM_SET_DRVDATA................................ \n");
+	printk("########## max17043_probe GPIO REQUEST PLATFORM_SET_DRVDATA................................ \n");
     platform_set_drvdata(pdev, max_dev);
 
 	i2c_max17043_dev = max_dev;
 
 	/* Raise SCL and SDA */
-//	printk("########## max17043_probe GPIO REQUEST I2C_SETSDA................................ \n");
+	printk("########## max17043_probe GPIO REQUEST I2C_SETSDA................................ \n");
 	max17043_i2c_setsda(max_dev, 1);
 	udelay(20);
-//	printk("########## max17043_probe GPIO REQUEST I2C_SETSCL................................ \n");
+	printk("########## max17043_probe GPIO REQUEST I2C_SETSCL................................ \n");
 	max17043_i2c_setscl(max_dev, 1);
 	udelay(20);
 
-//	printk("########## max17043_probe GPIO REQUEST i2c_bit_add_bus................................ \n");
+	printk("########## max17043_probe GPIO REQUEST i2c_bit_add_bus................................ \n");
 	ret = i2c_bit_add_bus(adapter);
 
 	if (ret < 0) {
@@ -1265,9 +1265,9 @@ static int max17043_probe(struct platform_device *pdev)
 	}
 	max_dev->is_active = 1;
 
-//	printk("########## max17043_probe GPIO REQUEST max17043_read_version................................ \n");
+	printk("########## max17043_probe GPIO REQUEST max17043_read_version................................ \n");
 	max17043_read_version(max_dev);
-//	printk("########## max17043_probe GPIO REQUEST max17043_read_config................................ \n");
+	printk("########## max17043_probe GPIO REQUEST max17043_read_config................................ \n");
 	max17043_read_config(max_dev);
 
 	//max17043_test();
@@ -1279,7 +1279,7 @@ static int max17043_probe(struct platform_device *pdev)
 
 #if defined(FG_WAKE_LCOK_TIMEOUT)
 	wake_lock_init(&i2c_max17043_dev->fg_timed_wake_lock, WAKE_LOCK_SUSPEND, "fg_timed_wakelock");
-//	printk("########## max17043_probe GPIO REQUEST wake_lock_init................................ \n");
+	printk("########## max17043_probe GPIO REQUEST wake_lock_init................................ \n");
 #endif
 
 	{

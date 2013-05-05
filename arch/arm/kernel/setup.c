@@ -373,7 +373,7 @@ static void __init setup_processor(void)
 #ifdef MULTI_CACHE
 	cpu_cache = *list->cache;
 #endif
-
+	printk(KERN_NOTICE "===> Kernel entry marker <=== [McDope]\n");
 	printk("CPU: %s [%08x] revision %d (ARMv%s), cr=%08lx\n",
 	       cpu_name, read_cpuid_id(), read_cpuid_id() & 15,
 	       proc_arch[cpu_architecture()], cr_alignment);

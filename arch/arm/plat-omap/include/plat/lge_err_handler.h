@@ -43,6 +43,10 @@ extern int  lge_is_mark_cp_crash();
 // hyoungsuk.jang@lge.com 20110128 CP Crash [END]
 extern void lge_dump_ap_crash();
 extern void lge_user_reset();
+// tobiasbaeumer@gmail.com 20130507 Using LGE crash handler external in other kernel code [START]
+// Remark: This isn't intented as permanent change, will use it to debug the CM-10.1 device tree i'm maintaining.
+extern void lge_dump_kernel_log(int tb_debug);
+// tobiasbaeumer@gmail.com 20130507 Using LGE crash handler external in other kernel code [END]
 
 //LGE_ChangeS jaesung.woo@lge.com 20110131 CIQ [START]
 extern void lge_store_ciq_reset(int is_ap, int cause);

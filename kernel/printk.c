@@ -42,6 +42,10 @@
 #include <linux/notifier.h>
 #include <linux/rculist.h>
 
+// tobiasbaeumer@gmail.com 20130507 Using LGE crash handler external in other kernel code [START]
+#include <plat/lge_err_handler.h>
+// tobiasbaeumer@gmail.com 20130507 Using LGE crash handler external in other kernel code [END]
+
 #include <asm/uaccess.h>
 
 /*
@@ -1028,6 +1032,10 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 		if (*p == '\n')
 			new_text_line = 1;
 	}
+
+	// tobiasbaeumer@gmail.com 20130507 Using LGE crash handler external in other kernel code [START]
+	lge_dump_kernel_log(1);
+	// tobiasbaeumer@gmail.com 20130507 Using LGE crash handler external in other kernel code [END]
 
 	/*
 	 * Try to acquire and then immediately release the

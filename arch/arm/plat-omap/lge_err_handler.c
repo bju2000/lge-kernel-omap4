@@ -107,7 +107,7 @@ void lge_user_reset()
 
 }
 
-void lge_dump_kernel_log(int tb_debug)
+static void lge_dump_kernel_log()
 {
 	extern int log_buf_copy(char *dest, int idx, int len);
 	char log_buf[1024];
@@ -117,14 +117,7 @@ void lge_dump_kernel_log(int tb_debug)
 	mm_segment_t oldfs = get_fs();
 	set_fs(KERNEL_DS);
 	
-	if(tb_debug == 0) 
-	{	
-		h_file = sys_open("/data/panic.txt", O_RDWR|O_CREAT,0644);
-	}
-	else
-	{
-		h_file = sys_open("/data/tb_debug.txt", O_RDWR|O_CREAT,0644);
-	}
+	h_file = sys_open("/data/panic.txt", O_RDWR|O_CREAT,0644);
 
 	if(h_file >= 0)
 	{
@@ -173,15 +166,14 @@ void lge_dump_ap_crash()
 	saved_oip = oops_in_progress;
 	oops_in_progress = 1;
 
-	lge_dump_kernel_log(0);
+	lge_dump_kernel_log();
 
 	// TO DO : adb log is not saved.
 	//lge_dump_android_log();	
 	//msleep(100);
 	twl_i2c_write_u8(0x14, 0x47, 0x06); 
 	return;
-}
-
+}
 
 //LGE_ChangeS jaesung.woo@lge.com 20110131 CIQ [START]
 void lge_store_ciq_reset(int is_ap, int cause)

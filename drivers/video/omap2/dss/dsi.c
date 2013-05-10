@@ -4065,8 +4065,7 @@ static int dsi_video_proto_config(struct omap_dss_device *dssdev)
 	int buswidth = 0;
 	u32 r;
 	int bytes_per_pixel;
-	int hbp, hfp, hsa, tl, line;
-	int lanes, line;
+	int hbp, hfp, hsa, tl, lanes, line;
 
 	dsi_config_tx_fifo(dsidev, DSI_FIFO_SIZE_32,
 			DSI_FIFO_SIZE_32,

@@ -421,20 +421,17 @@ int dsscomp_gralloc_queue(struct dsscomp_setup_dispc_data *d,
 	int skip;
 	struct dsscomp_gralloc_t *gsync;
 	struct dss2_rect_t win = { .w = 0 };
-<<<<<<< HEAD
 #if defined(CONFIG_MACH_LGE_COSMO_3D_DISPLAY) || defined(CONFIG_MACH_LGE_CX2_3D_DISPLAY)//##hwcho_20120522
 #ifdef CONFIG_DSSCOMP_ADAPT
 	struct dsscomp_adapt_info* adapt_info = NULL;
 #endif
 #endif //##
-=======
 
 	ion_phys_addr_t phys = 0;
 	size_t tiler2d_size;
 	struct tiler_view_t view;
 	u32 wb_mgr_ix;
 
->>>>>>> 519bdcb4401cae8ba453c251cc3eba6d419917e7
 	/* reserve tiler areas if not already done so */
 	dsscomp_gralloc_init(cdev);
 
@@ -812,12 +809,10 @@ skip_map1d:
 		atomic_inc(&gsync->refs);
 		log_event(0, ms, gsync, "++refs=%d for [%p]",
 				atomic_read(&gsync->refs), (u32) comp[ch]);
-<<<<<<< HEAD
 #ifdef CONFIG_DSSCOMP_COPY_FOR_ROT
 		dsscomp_rotbuf_mgr_start_dma_copy_of_gralloc(gsync, ch);
 		dsscomp_rotbuf_mgr_wait_dma_copy_of_gralloc(gsync, ch);
 #endif
-=======
 
 		if (wb_mgr_ix < MAX_MANAGERS && blanked)
 			comp[ch]->m2m_only = true;
@@ -850,7 +845,6 @@ skip_map1d:
 			continue;
 		}
 
->>>>>>> 519bdcb4401cae8ba453c251cc3eba6d419917e7
 		r = dsscomp_delayed_apply(comp[ch]);
 		if (r)
 			dev_err(DEV(cdev), "failed to apply comp (%d)\n", r);

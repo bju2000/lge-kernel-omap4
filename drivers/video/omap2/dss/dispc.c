@@ -4273,6 +4273,40 @@ err:
 }
 EXPORT_SYMBOL(omap_dispc_register_isr);
 
+int omap_dispc_unregister_isr(omap_dispc_isr_t isr, void *arg, u32 mask)
+{
+	int i;
+	unsigned long flags;
+	int ret = -EINVAL;
+	struct omap_dispc_isr_data *isr_data;
+
+	spin_lock_irqsave(&dispc.irq_lock, flags);
+
+	for (i = 0; i < DISPC_MAX_NR_ISRS; i++) {
+		isr_data = &dispc.registered_isr[i];
+		if (isr_data->isr != isr || isr_data->arg != arg ||
+				isr_data->mask != mask)
+			continue;
+
+		/* found the correct isr */
+
+		isr_data->isr = NULL;
+		isr_data->arg = NULL;
+		isr_data->mask = 0;
+
+		ret = 0;
+		break;
+	}
+
+	if (ret == 0)
+		_omap_dispc_set_irqs();
+
+	spin_unlock_irqrestore(&dispc.irq_lock, flags);
+
+	return ret;
+}
+EXPORT_SYMBOL(omap_dispc_unregister_isr);
+
 /* WARNING: callback might be executed even after this function returns! */
 int omap_dispc_unregister_isr_nosync(omap_dispc_isr_t isr, void *arg, u32 mask)
 {
@@ -5018,33 +5052,6 @@ u32 gamma_rgb_data_dispc_for_extern(char *str)
 //CHANGE_E mo2mk.kim@lge.com 2012-07-26 apply kcal code for gamma
 
 #ifdef CONFIG_DSSCOMP_ADAPT
-void dispc_set_wb_channel_out(enum omap_plane plane)
-{
-	int shift;
-	u32 val;
-
-	switch (plane) {
-	case OMAP_DSS_GFX:
-		shift = 8;
-		break;
-	case OMAP_DSS_VIDEO1:
-	case OMAP_DSS_VIDEO2:
-	case OMAP_DSS_VIDEO3:
-		shift = 16;
-		break;
-	default:
-		BUG();
-		return;
-	}
-
-	val = dispc_read_reg(DISPC_OVL_ATTRIBUTES(plane));
-	val = FLD_MOD(val, 0, shift, shift);
-	val = FLD_MOD(val, 3, 31, 30);
-
-	dispc_write_reg(DISPC_OVL_ATTRIBUTES(plane), val);
-	DSSDBG("Plane(%d) set wb input\n", plane);
-}
-
 /**
  * Must be not tiller
  */

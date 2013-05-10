@@ -44,7 +44,7 @@
 #include <mach-omap2/prm-regbits-44xx.h>
 #include <mach-omap2/prm44xx.h>
 #include <mach-omap2/control.h>
-#include <mach-omap2/omap4_ion.h>
+#include <mach/omap4_ion.h>
 #include <mach-omap2/omap_ram_console.h>
 
 #include <video/omapdss.h>

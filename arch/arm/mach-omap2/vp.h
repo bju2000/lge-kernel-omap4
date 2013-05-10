@@ -79,16 +79,6 @@ struct omap_vp_common {
 };
 
 /**
-   * struct omap_vp_volt_limits - Voltage limit Parameters for SoC
-   * @vddmin:¡í	  Minimum voltage in uV
-   * @vddmax:¡í	  Maximum voltage in uV
-   */
-struct omap_vp_volt_limits {
-	u32 vddmin;
-	u32 vddmax;
-};
-
-/**
  * struct omap_vp_volt_limits - Voltage limit Parameters for SoC
  * @vddmin:	Minimum voltage in uV
  * @vddmax:	Maximum voltage in uV

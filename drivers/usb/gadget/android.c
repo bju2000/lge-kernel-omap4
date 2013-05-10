@@ -135,11 +135,6 @@ struct android_usb_function {
 	
 	/* Optional: cleanup during gadget unbind */
 	void (*cleanup)(struct android_usb_function *);
-	/* Optional: called when the function is added the list of
-	 *		enabled functions */
-	void (*enable)(struct android_usb_function *);
-	/* Optional: called when it is removed */
-	void (*disable)(struct android_usb_function *);
 
 	int (*bind_config)(struct android_usb_function *, struct usb_configuration *);
 
@@ -369,11 +364,6 @@ struct adb_data {
 /*-------------------------------------------------------------------------*/
 /* Supported functions initialization */
 
-struct adb_data {
-	bool opened;
-	bool enabled;
-};
-
 static int adb_function_init(struct android_usb_function *f, struct usb_composite_dev *cdev)
 {
 	f->config = kzalloc(sizeof(struct adb_data), GFP_KERNEL);
@@ -392,29 +382,6 @@ static void adb_function_cleanup(struct android_usb_function *f)
 static int adb_function_bind_config(struct android_usb_function *f, struct usb_configuration *c)
 {
 	return adb_bind_config(c);
-}
-static void adb_android_function_enable(struct android_usb_function *f)
-{
-	struct android_dev *dev = _android_dev;
-	struct adb_data *data = f->config;
-
-	data->enabled = true;
-
-	/* Disable the gadget until adbd is ready */
-	if (!data->opened)
-		android_disable(dev);
-}
-
-static void adb_android_function_disable(struct android_usb_function *f)
-{
-	struct android_dev *dev = _android_dev;
-	struct adb_data *data = f->config;
-
-	data->enabled = false;
-
-	/* Balance the disable that was called in closed_callback */
-	if (!data->opened)
-		android_enable(dev);
 }
 
 static void adb_android_function_enable(struct android_usb_function *f)

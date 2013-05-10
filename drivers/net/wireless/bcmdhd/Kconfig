@@ -65,7 +65,7 @@ config BCMDHD_HOSTWAKEUP_USE_SDIO
 	bool "Use SDIO pin to the Host Wakeup"
 	default n
 	---help---
-	  Use SDIO pin to the Host Wakeup
+	  Use SDIO pin to the Host Wakeup / Use memory preallocated in platform
 
 config BCMDHD_GPIO_WL_HOSTWAKEUP
 	depends on BCMDHD && BCMDHD_HOSTWAKEUP_USE_GPIO = y
@@ -95,3 +95,17 @@ config BRCM_CCX
          default n
          ---help---
            Enables CCX support
+
+config DHD_USE_SCHED_SCAN
+	bool "Use CFG80211 sched scan"
+	depends on BCMDHD && CFG80211
+	default n
+	---help---
+	  Use CFG80211 sched scan
+
+config DHD_ENABLE_P2P
+	bool "Enable Wifi Direct"
+	depends on BCMDHD && CFG80211
+	default n
+	---help---
+	  Use Enable Wifi Direct

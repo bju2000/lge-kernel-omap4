@@ -78,7 +78,6 @@ struct omap_vp_common {
 	const struct omap_vp_ops *ops;
 };
 
-// LGE_CHANGE_START [bk.shin@lge.com] 2012-04-25, TI patch :  introduce SoC limit parameters
 /**
    * struct omap_vp_volt_limits - Voltage limit Parameters for SoC
    * @vddmin:¡í	  Minimum voltage in uV
@@ -88,8 +87,16 @@ struct omap_vp_volt_limits {
 	u32 vddmin;
 	u32 vddmax;
 };
-// LGE_CHANGE_END [bk.shin@lge.com] 2012-04-25
 
+/**
+ * struct omap_vp_volt_limits - Voltage limit Parameters for SoC
+ * @vddmin:	Minimum voltage in uV
+ * @vddmax:	Maximum voltage in uV
+ */
+struct omap_vp_volt_limits {
+	u32 vddmin;
+	u32 vddmax;
+};
 
 /**
  * struct omap_vp_instance - VP register offsets (per-VDD)
@@ -100,9 +107,7 @@ struct omap_vp_volt_limits {
  * @vstatus: PRM_VP*_VSTATUS reg offset from PRM start
  * @voltage: PRM_VP*_VOLTAGE reg offset from PRM start
  * @enabled: flag to keep track of whether vp is enabled or not
- // LGE_CHANGE_START [bk.shin@lge.com] 2012-04-25, TI patch :  introduce SoC limit parameters
  * @limits: limits to set based off SoC VP capability.
- // LGE_CHANGE_END [bk.shin@lge.com] 2012-04-25
  *
  * XXX vp_common is probably not needed since it is per-SoC
  */
@@ -116,9 +121,7 @@ struct omap_vp_instance {
 	u8 voltage;
 	u8 id;
 	bool enabled;
-// LGE_CHANGE_START [bk.shin@lge.com] 2012-04-25, TI patch :  introduce SoC limit parameters
 	struct omap_vp_volt_limits *vlimits;
-// LGE_CHANGE_END [bk.shin@lge.com] 2012-04-25
 };
 
 extern struct omap_vp_instance omap3_vp_mpu;

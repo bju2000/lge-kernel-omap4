@@ -671,11 +671,10 @@ struct twl4030_bci_platform_data {
 	unsigned int max_bat_voltagemV;
 	unsigned int low_bat_voltagemV;
 
+	unsigned int sense_resistor_mohm;
+
 	/* twl6032 */
-	unsigned int use_hw_charger;
-	unsigned int use_power_path;
 	unsigned long features;
-	unsigned int use_eeprom_config;
 
 	/* LGE_SJIT 2012-01-25 [dojip.kim@lge.com]
 	 * LGE specific platform data
@@ -683,6 +682,8 @@ struct twl4030_bci_platform_data {
 #ifdef CONFIG_MACH_LGE
 	int gpio_omap_send;
 #endif
+
+	unsigned long errata;
 };
 
 /* TWL4030_GPIO_MAX (18) GPIOs, with interrupts */
@@ -1231,5 +1232,6 @@ static inline int twl4030charger_usb_en(int enable) { return 0; }
 
 #endif	/* CONFIG_MAHC_LGE */
 /* LGE_CHANGE_E [jongho3.lee@lge.com] ?-?-? */
+#define TWL6032_ERRATA_DB00119490	(1 << 0)
 
 #endif /* End of __TWL4030_H */

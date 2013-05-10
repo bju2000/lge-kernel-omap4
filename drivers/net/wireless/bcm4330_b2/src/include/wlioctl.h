@@ -24,7 +24,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: wlioctl.h,v 1.767.2.38 2011-02-01 23:04:28 Exp $
+ * $Id: wlioctl.h 331292 2012-05-04 09:04:23Z $
  */
 
 
@@ -1174,7 +1174,7 @@ typedef struct {
 
 #define WL_AUTH_OPEN_SYSTEM     0   
 #define WL_AUTH_SHARED_KEY      1   
-#define WL_AUTH_OPEN_SHARED     2   
+#define WL_AUTH_OPEN_SHARED		2	
 
 
 #define WL_RADIO_SW_DISABLE     (1<<0)
@@ -1416,6 +1416,14 @@ typedef struct wl_sampledata {
 	uint32 flag;    
 } wl_sampledata_t;
 
+
+#define WL_CHAN_VALID_HW    (1 << 0)    
+#define WL_CHAN_VALID_SW    (1 << 1)    
+#define WL_CHAN_BAND_5G     (1 << 2)    
+#define WL_CHAN_RADAR       (1 << 3)    
+#define WL_CHAN_INACTIVE    (1 << 4)    
+#define WL_CHAN_PASSIVE     (1 << 5)    
+#define WL_CHAN_RESTRICTED  (1 << 6)    
 
 
 #define WL_ERROR_VAL        0x00000001

@@ -27,8 +27,13 @@
 #include <linux/workqueue.h>
 #include <linux/kthread.h>
 #include <linux/mutex.h>
-
+#include <linux/slab.h>
+#include <linux/input.h>
 #include <asm/cputime.h>
+
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/init.h>
 
 static atomic_t active_count = ATOMIC_INIT(0);
 
@@ -120,6 +125,12 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 
 static int interactive_boost(struct cpufreq_policy *policy);
 
+/*
+ * Non-zero means longer-term speed boost active.
+ */
+ 
+static int boost_val;
+
 #ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 static
 #endif
@@ -155,8 +166,8 @@ static void cpufreq_interactive_timer(unsigned long data)
 	struct cpufreq_interactive_cpuinfo *pcpu =
 		&per_cpu(cpuinfo, data);
 	u64 now_idle;
-	unsigned int new_freq;
-	unsigned int index;
+	unsigned int new_freq, new_tune_value;
+        unsigned int index, i, j;
 	unsigned long flags;
 
 	smp_rmb();
@@ -268,14 +279,13 @@ static void cpufreq_interactive_timer(unsigned long data)
 
 	if (cur_tune_value == LOW_POWER_TUNE) {
 		if (low_power_rate < sampling_periods)
-			cpu_load = pcpu->low_power_rate_history
-						/ low_power_rate;
+			cpu_load = pcpu->low_power_rate_history / low_power_rate;
 		else
 			cpu_load = pcpu->total_avg_load;
 	}
 
 	if (cpu_load >= go_hispeed_load || boost_val) {
-		if (pcpu->target_freq <= pcpu->policy->min) {
+		if (pcpu->target_freq <= pcpu->policy->min) 
 			new_freq = hispeed_freq;
 		else
 			new_freq = pcpu->policy->max * cpu_load / 100;
@@ -718,7 +728,7 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 		unsigned int event)
 {
 	int rc;
-	unsigned int j;
+	unsigned int j, i;
 	struct cpufreq_interactive_cpuinfo *pcpu;
 	struct cpufreq_frequency_table *freq_table;
 
